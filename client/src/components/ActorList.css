@@ -1,0 +1,13 @@
+.actor-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.actor-details {
+  flex: 1;
+}
+
+.actor-details h3 {
+  margin-top: 0;
+}

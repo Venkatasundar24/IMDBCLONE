@@ -1,0 +1,13 @@
+.producer-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.producer-details {
+  flex: 1;
+}
+
+.producer-details h3 {
+  margin-top: 0;
+}

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="Web site created using create-react-app" />
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <title>IMDB</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+    }
+    .header {
+      background-color: #1c1c1c;
+      color: white;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 50px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .header-left, .header-right {
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+    .header-left {
+      flex: 1;
+    }
+    .header-right {
+      flex: 1;
+      justify-content: flex-end;
+    }
+    .logo {
+      margin-right: 20px;
+    }
+    .logo img {
+      height: 40px;
+    }
+    .menu-dropdown {
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      margin-right: 20px;
+    }
+    .menu-dropdown button {
+      background-color: transparent;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+    .menu-dropdown button img {
+      height: 20px;
+      margin-right: 5px;
+    }
+    .menu-dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #333;
+      color: white;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+    }
+    .menu-dropdown-content a {
+      color: white;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: flex;
+    }
+    .menu-dropdown-content a:hover {
+      background-color: #444;
+    }
+    .menu-dropdown:hover .menu-dropdown-content {
+      display: flex;
+    }
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background-color: #fff;
+      border-radius: 4px;
+      height: 30px;
+      border: 1px solid #ccc;
+      flex-grow: 2;
+      margin: 0 20px;
+    }
+    .search-bar select {
+      border: none;
+      background-color: #f5f5f5;
+      padding: 5px;
+      border-radius: 4px 0 0 4px;
+      outline: none;
+      font-size: 14px;
+    }
+    .search-bar input[type="text"] {
+      padding: 5px;
+      border: none;
+      flex-grow: 1;
+      outline: none;
+      font-size: 14px;
+    }
+    .search-bar button {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+    }
+    .search-bar button img {
+      height: 20px;
+    }
+    nav {
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 10px;
+      font-size: 16px;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .footer {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 10px 0;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+    .content {
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <script src="path/to/main.js"></script>
+  <div class="header">
+    <div class="header-left">
+      <div class="logo">
+        <img src="./images/logo.png" alt="IMDB Clone Logo" />
+      </div>
+      <div class="menu-dropdown">
+        <button>
+          <img src="https://img.icons8.com/ios-filled/50/ffffff/menu.png" alt="Menu Icon" />
+          <span>Menu</span>
+        </button>
+        <div class="menu-dropdown-content">
+          <a href="#" data-page="all">All</a>
+          <a href="#" data-page="actors">Actors</a>
+          <a href="#" data-page="movies">Movies</a>
+          <a href="#" data-page="producers">Producers</a>
+        </div>
+      </div>
+    </div>
+    <div class="search-bar">
+      <select id="search-category">
+        <option value="all">All</option>
+        <option value="actors">Actors</option>
+        <option value="movies">Movies</option>
+        <option value="producers">Producers</option>
+      </select>
+      <input id="search-query" type="text" placeholder="Search IMDB" />
+      <button id="search-button">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Magnifying_glass_icon.svg/24px-Magnifying_glass_icon.svg.png" alt="Search Icon" />
+      </button>
+    </div>
+    <div class="header-right">
+      <nav>
+        <a href="#" data-page="actors">Actors</a>
+        <a href="#" data-page="movies">Movies</a>
+        <a href="#" data-page="producers">Producers</a>
+      </nav>
+    </div>
+  </div>
+  <div id="root" class="content">
+  </div>
+  <div class="footer">IMDB Clone - Footer</div>
+  <script>
+    document.querySelectorAll('nav a, .menu-dropdown-content a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const page = link.getAttribute('data-page');
+        loadPage(page);
+      });
+    });
+  
+    document.getElementById('search-button').addEventListener('click', (e) => {
+      e.preventDefault();
+      const category = document.getElementById('search-category').value;
+      const query = document.getElementById('search-query').value.trim();
+      if (query) {
+        searchContent(category, query);
+      }
+    });
+  
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString();
+    }
+  
+    function loadPage(page) {
+      const root = document.getElementById('root');
+      if (page === 'all') {
+        root.innerHTML = `<h1>Loading...</h1>`;
+        Promise.all([
+          fetch('/api/movies').then(response => response.json()),
+          fetch('/api/actors').then(response => response.json()),
+          fetch('/api/producers').then(response => response.json())
+        ])
+        .then(([movies, actors, producers]) => {
+          root.innerHTML = `
+            <h2>Movies</h2>
+            <div class="content-category">
+              ${movies.map(movie => `
+                <div class="content-item">
+                  <h3>${movie.title} (${movie.year})</h3>
+                  <p>${movie.plot}</p>
+                  <img src="${movie.poster}" alt="${movie.title} Poster" style="max-width: 200px;" />
+                </div>
+              `).join('')}
+            </div>
+            <h2>Actors</h2>
+            <div class="content-category">
+              ${actors.map(actor => `
+                <div class="content-item">
+                  <h3>${actor.name}</h3>
+                  <p>Gender: ${actor.gender}</p>
+                  <p>Date of Birth: ${formatDate(actor.dob)}</p>
+                  <p>Bio: ${actor.bio}</p>
+                </div>
+              `).join('')}
+            </div>
+            <h2>Producers</h2>
+            <div class="content-category">
+              ${producers.map(producer => `
+                <div class="content-item">
+                  <h3>${producer.name}</h3>
+                  <p>Gender: ${producer.gender}</p>
+                  <p>Date of Birth: ${formatDate(producer.dob)}</p>
+                  <p>Bio: ${producer.bio}</p>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        })
+        .catch(error => {
+          root.innerHTML = `<p>Error loading content: ${error.message}</p>`;
+        });
+      } else {
+        root.innerHTML = `<h1>Loading...</h1>`;
+        fetch(`/api/${page}`)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+          })
+          .then(data => {
+            root.innerHTML = generateContent(page, data);
+          })
+          .catch(error => {
+            root.innerHTML = `<p>Error loading ${page}: ${error.message}</p>`;
+          });
+      }
+    }
+    function searchContent(category, query) {
+  const root = document.getElementById('root');
+  root.innerHTML = `<h1>Searching...</h1>`;
+  fetch(`/api/search?category=${category}&query=${encodeURIComponent(query)}`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok ' + response.statusText);
+      }
+      return response.json();
+    })
+    .then(data => {
+      root.innerHTML = generateSearchResults(category, data);
+    })
+    .catch(error => {
+      root.innerHTML = `<p>Error searching: ${error.message}</p>`;
+    });
+}
+
+function generateSearchResults(category, data) {
+  if (category === 'movies') {
+    return `
+      <h2>Search Results - Movies</h2>
+      <ul>
+        ${data.map(movie => `
+          <li>
+            <h3>${movie.title}</h3>
+            <p>Year: ${movie.year}</p>
+            <p>Plot: ${movie.plot}</p>
+            <img src="${movie.poster}" alt="${movie.title} Poster" />
+          </li>
+        `).join('')}
+      </ul>
+    `;
+  } else if (category === 'actors') {
+    return `
+      <h2>Search Results - Actors</h2>
+      <ul>
+        ${data.map(actor => `
+          <li>
+            <h3>${actor.name}</h3>
+            <p>Date of Birth: ${new Date(actor.dob).toLocaleDateString()}</p>
+            <p>Gender: ${actor.gender}</p>
+            <p>Bio: ${actor.bio}</p>
+          </li>
+        `).join('')}
+      </ul>
+    `;
+  } else if (category === 'producers') {
+    return `
+      <h2>Search Results - Producers</h2>
+      <ul>
+        ${data.map(producer => `
+          <li>
+            <h3>${producer.name}</h3>
+            <p>Date of Birth: ${new Date(producer.dob).toLocaleDateString()}</p>
+            <p>Gender: ${producer.gender}</p>
+            <p>Bio: ${producer.bio}</p>
+          </li>
+        `).join('')}
+      </ul>
+    `;
+  } else {
+    return `<p>No results found.</p>`;
+  }
+}
+    function generateContent(page, data) {
+      if (page === 'actors') {
+        return `
+          <h2>Actors</h2>
+          <ul>
+            ${data.map(actor => `
+              <li>
+                <h3>${actor.name}</h3>
+                <p>Gender: ${actor.gender}</p>
+                <p>Date of Birth: ${formatDate(actor.dob)}</p>
+                <p>Bio: ${actor.bio}</p>
+              </li>
+            `).join('')}
+          </ul>
+        `;
+      } else if (page === 'movies') {
+        return `
+          <h2>Movies</h2>
+          <ul>
+            ${data.map(movie => `
+              <li>
+                <h3>${movie.title} (${movie.year})</h3>
+                <p>${movie.plot}</p>
+                <img src="${movie.poster}" alt="${movie.title} Poster" style="max-width: 200px;" />
+              </li>
+            `).join('')}
+          </ul>
+        `;
+      } else if (page === 'producers') {
+        return `
+          <h2>Producers</h2>
+          <ul>
+            ${data.map(producer => `
+              <li>
+                <h3>${producer.name}</h3>
+                <p>Gender: ${producer.gender}</p>
+                <p>Date of Birth: ${formatDate(producer.dob)}</p>
+                <p>Bio: ${producer.bio}</p>
+              </li>
+            `).join('')}
+          </ul>
+        `;
+      }
+    }
+  
+    function generateSearchResults(category, data) {
+      if (category === 'all') {
+        return `
+          <h2>Search Results</h2>
+          <h3>Actors</h3>
+          <ul>
+            ${data.actors.map(actor => `
+              <li>
+                <h3>${actor.name}</h3>
+                <p>Gender: ${actor.gender}</p>
+                <p>Date of Birth: ${formatDate(actor.dob)}</p>
+                <p>Bio: ${actor.bio}</p>
+              </li>
+            `).join('')}
+          </ul>
+          <h3>Movies</h3>
+          <ul>
+            ${data.movies.map(movie => `
+              <li>
+                <h3>${movie.title} (${movie.year})</h3>
+                <p>${movie.plot}</p>
+                <img src="${movie.poster}" alt="${movie.title} Poster" style="max-width: 200px;" />
+              </li>
+            `).join('')}
+          </ul>
+          <h3>Producers</h3>
+          <ul>
+            ${data.producers.map(producer => `
+              <li>
+                <h3>${producer.name}</h3>
+                <p>Gender: ${producer.gender}</p>
+                <p>Date of Birth: ${formatDate(producer.dob)}</p>
+                <p>Bio: ${producer.bio}</p>
+              </li>
+            `).join('')}
+          </ul>
+        `;
+      } else if (category === 'actors') {
+        return `
+          <h2>Actors</h2>
+          <ul>
+            ${data.map(actor => `
+              <li>
+                <h3>${actor.name}</h3>
+                <p>Gender: ${actor.gender}</p>
+                <p>Date of Birth: ${formatDate(actor.dob)}</p>
+                <p>Bio: ${actor.bio}</p>
+              </li>
+            `).join('')}
+          </ul>
+        `;
+      } else if (category === 'movies') {
+        return `
+          <h2>Movies</h2>
+          <ul>
+            ${data.map(movie => `
+              <li>
+                <h3>${movie.title} (${movie.year})</h3>
+                <p>${movie.plot}</p>
+                <img src="${movie.poster}" alt="${movie.title} Poster" style="max-width: 200px;" />
+              </li>
+            `).join('')}
+          </ul>
+        `;
+      } else if (category === 'producers') {
+        return `
+          <h2>Producers</h2>
+          <ul>
+            ${data.map(producer => `
+              <li>
+                <h3>${producer.name}</h3>
+                <p>Gender: ${producer.gender}</p>
+                <p>Date of Birth: ${formatDate(producer.dob)}</p>
+                <p>Bio: ${producer.bio}</p>
+              </li>
+            `).join('')}
+          </ul>
+        `;
+      }
+    }
+  </script>
+   
+</body>
+</html>
